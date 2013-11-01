@@ -2,24 +2,34 @@
 #include <stdlib.h>
 #include <netinet/in.h>
 #include <strings.h>
+#include <errno.h>
 #include <ev.h>
 #include <unistd.h>
+#include <fcntl.h>
+#include <string.h>
 
-#define PORT_NO 3034
+#define PORT_NO 2001
 #define BUFFER_SIZE 1024
 
 int total_clients = 0;  // Total number of connected clients
+
+void make_nonblocking(int fd)
+{
+    fcntl(fd, F_SETFL, O_NONBLOCK);
+}
 
 void accept_cb(struct ev_loop *loop, struct ev_io *watcher, int revents);
 void read_cb(struct ev_loop *loop, struct ev_io *watcher, int revents);
 
 int main()
-{
+{	
 	struct ev_loop *loop = ev_default_loop(0);
 	int sd;
 	struct sockaddr_in addr;
-	int addr_len = sizeof(addr);
 	struct ev_io w_accept;
+
+	// ignore sigpipe
+	signal(SIGPIPE, SIG_IGN);
 
 	// Create server socket
 	if( (sd = socket(PF_INET, SOCK_STREAM, 0)) < 0 )
@@ -33,8 +43,8 @@ int main()
 	addr.sin_port = htons(PORT_NO);
 	addr.sin_addr.s_addr = INADDR_ANY;
 
-	int optval = 1;
-	if(setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(int)))
+	int one = 1;
+	if(setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(int)))
 	{
 	    perror("setsockopt");
 	}
@@ -85,6 +95,9 @@ void accept_cb(struct ev_loop *loop, struct ev_io *watcher, int revents)
 
 	// Accept client request
 	client_sd = accept(watcher->fd, (struct sockaddr *)&client_addr, &client_len);
+	
+	// make client nonblocking
+	make_nonblocking(watcher->fd);
 
 	if (client_sd < 0)
 	{
@@ -118,6 +131,12 @@ void read_cb(struct ev_loop *loop, struct ev_io *watcher, int revents)
 
 	if(read < 0)
 	{
+		if(read == -1 && errno == EAGAIN) {
+			printf("got EAGAIN!!!\n");
+			exit(1);
+			return;
+		}
+		
   		perror("read error");
   		return;
 	}
@@ -135,10 +154,13 @@ void read_cb(struct ev_loop *loop, struct ev_io *watcher, int revents)
 	}
 	else
 	{
-  		printf("message:%s\n",buffer);
+  		//printf("message = %ld bytes\n", read);
 	}
+	
+	char buf[1024];
+	sprintf(buf, "message = %ld bytes\n", read);
 
 	// Send message back to the client
-	send(watcher->fd, buffer, read, 0);
+	send(watcher->fd, buf, strlen(buf), 0);
 	bzero(buffer, read);
 }

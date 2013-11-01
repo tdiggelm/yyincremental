@@ -5,7 +5,7 @@
 	#include "parser.h"
 	#include "lexer.h"
 	
-	void yyerror(yyscan_t scanner, const char *msg) {
+	void yyerror(context& ctx, yyscan_t scanner, const char *msg) {
 		printf("parse error: %s\n", msg);
 	}
 %}
@@ -13,6 +13,7 @@
 %define api.push-pull push
 %define api.pure
 %lex-param { void* scanner }
+%parse-param { context& ctx }
 %parse-param { void* scanner }
 
 %union {
@@ -37,7 +38,7 @@ stmt	: line
 		;
 		
 line	: /*empty*/ EOL
-		| INTEGER EOL { printf("INTEGER = %ld\n", $1); }
+		| INTEGER EOL { ctx.foundint($1); }
 		;
 
 %%
