@@ -16,4 +16,4 @@ parser.cc:	parser.y lexer.cc objects.h
 			bison parser.y
  
 clean:
-			rm -f *.o *~ lexer.cc lexer.h parser.cc parser.h server
+			rm -f *.o *~ lexer.cc lexer.h parser.cc parser.h server parse

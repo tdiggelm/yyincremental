@@ -24,6 +24,8 @@
 
 int main()
 {	
+	// TODO: add possibility to create context on traditional input file
+
 	context ctx;
 	ctx.feed("123");
 	ctx.feed("\n456\n");
@@ -31,7 +33,7 @@ int main()
 	ctx.feed("9\n\n\n177\n");
 	ctx.parse();
 	
-	while(1)
+	while(0)
 	{
 		context* ctx = new context();
 		ctx->feed("123");
