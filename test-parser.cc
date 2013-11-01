@@ -25,12 +25,19 @@
 int main()
 {	
 	// TODO: add possibility to create context on traditional input file
-
+	// TODO: build virtual class that is extendable for integration with other parsers
+	// TODO: add namespace
+	// TODO: add optional buffer limit
+	// TODO: add clear buffer function
+	
 	context ctx;
 	ctx.feed("123");
 	ctx.feed("\n456\n");
+	ctx.parse();
 	ctx.feed("\n78");
-	ctx.feed("9\n\n\n177\n");
+	ctx.feed("9\n\n\n177\n55");
+	ctx.parse();
+	ctx.feed("\n");
 	ctx.parse();
 	
 	while(0)
