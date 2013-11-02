@@ -22,8 +22,8 @@
 
 #include <stdio.h>
 #include "objects.h"
-#include "parser.h"
-#include "lexer.h"
+#include "yyparser.h"
+#include "yylexer.h"
 	
 void yyerror(parser& ctx, yyscan_t scanner, const char *msg) {
 	printf("parse error: %s\n", msg);
@@ -33,6 +33,7 @@ void yyerror(parser& ctx, yyscan_t scanner, const char *msg) {
 
 %define api.push-pull push
 %define api.pure
+
 %lex-param { void* scanner }
 %parse-param { parser& ctx }
 %parse-param { void* scanner }
@@ -44,8 +45,8 @@ void yyerror(parser& ctx, yyscan_t scanner, const char *msg) {
 %token EOL
 %token <integer> INTEGER
 
-%output  "parser.cc"
-%defines "parser.h"
+%output  "yyparser.cc"
+%defines "yyparser.h"
 
 %%
 

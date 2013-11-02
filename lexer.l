@@ -22,7 +22,7 @@
 
 #include <assert.h>
 #include "objects.h"
-#include "parser.h"
+#include "yyparser.h"
 
 //#define DEBUG
 
@@ -38,7 +38,7 @@
 
 %}
 
-%option outfile = "lexer.cc" header-file="lexer.h"
+%option outfile = "yylexer.cc" header-file="yylexer.h"
 %option bison-bridge
 %option noyywrap
 %option nounput
