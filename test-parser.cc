@@ -31,6 +31,10 @@ public:
 	{
 		cout << "@@@ integer: " << num << endl;
 	}
+	void error(const char* msg)
+	{
+		cout << "@@@ error: " << msg << endl;
+	}
 };
 
 int main()

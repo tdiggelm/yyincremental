@@ -25,8 +25,8 @@
 #include "yyparser.h"
 #include "yylexer.h"
 	
-void yyerror(parser& ctx, yyscan_t scanner, const char *msg) {
-	printf("parse error: %s\n", msg);
+void yyerror(parser& p, yyscan_t scanner, const char *msg) {
+	p.error(msg);
 }
 
 %}

@@ -56,6 +56,7 @@ public:
 	int yyinput(char* buffer, int size);
 	
 	virtual void foundint(long int num) = 0;
+	virtual void error(const char* msg) = 0;
 	
 protected:
 	void init();
