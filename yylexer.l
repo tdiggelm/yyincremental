@@ -83,7 +83,6 @@ void parser::parse()
 	assert(status != YYPUSH_MORE);
 	
 	while(1) {
-		//printf("parse: bufleng: %ld\n", bufleng);
 		token = yylex(&val, scanner);
 		if (token == YY_NULL && status == YYPUSH_MORE) return;
 		status = yypush_parse((yypstate*)ps, token, &val, *this, scanner);
@@ -118,8 +117,6 @@ int parser::feed(const char* buffer, size_t size)
 
 int parser::yyinput(char* buffer, int size)
 {
-	printf("yyinput: bufleng: %ld\n", bufleng);
-	
 	int len = MIN(size, bufleng);
 	
 	// copy to yy buffer
