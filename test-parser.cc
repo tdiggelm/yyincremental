@@ -19,8 +19,19 @@
  * IN THE SOFTWARE.
  */
 
-#include <stdio.h>
+#include <iostream>
 #include "objects.h"
+
+using namespace std;
+
+class intparser : public parser
+{
+public:
+	void foundint(long int num)
+	{
+		cout << "@@@ integer: " << num << endl;
+	}
+};
 
 int main()
 {	
@@ -30,25 +41,25 @@ int main()
 	// TODO: add optional buffer limit
 	// TODO: add clear buffer function
 	
-	context ctx;
-	ctx.feed("123");
-	ctx.feed("\n456\n");
-	ctx.parse();
-	ctx.feed("\n78");
-	ctx.feed("9\n\n\n177\n55");
-	ctx.parse();
-	ctx.feed("\n");
-	ctx.parse();
+	intparser pp;
+	pp.feed("123");
+	pp.feed("\n456\n");
+	pp.parse();
+	pp.feed("\n78");
+	pp.feed("9\n\n\n177\n55");
+	pp.parse();
+	pp.feed("\n");
+	pp.parse();
 	
 	while(0)
 	{
-		context* ctx = new context();
-		ctx->feed("123");
-		ctx->feed("\n456\n");
-		ctx->feed("\n78");
-		ctx->feed("9\n\n\n177\n");
-		ctx->parse();
-		delete ctx;
+		intparser* pp = new intparser();
+		pp->feed("123");
+		pp->feed("\n456\n");
+		pp->feed("\n78");
+		pp->feed("9\n\n\n177\n");
+		pp->parse();
+		delete pp;
 	}
 	
 	return 0;

@@ -20,20 +20,21 @@
  */
 
 #include <string.h>
+#include <stdlib.h>
 
-class context
+class parser
 {
 public:
-	context()
+	parser()
 		: bufdata(NULL), bufleng(0)
 	{
 		init();
 	}
 
-	~context()
+	virtual ~parser()
 	{
-		delete bufdata;
-		free();
+		free(bufdata);
+		destroy();
 	}
 	
 	int feed(const char* buffer, size_t size);
@@ -45,23 +46,20 @@ public:
 	
 	void parse();
 	
-	void parse(const char* buffer, int size);
-	
-	void parse(const char* str)
+	void clear()
 	{
-		return parse(str, strlen(str));
+		free(bufdata);
+		bufdata = NULL;
+		bufleng = 0;
 	}
 	
 	int yyinput(char* buffer, int size);
 	
-	void foundint(long int num)
-	{
-		printf("@@@ foundint %ld\n", num);
-	}
+	virtual void foundint(long int num) = 0;
 	
 protected:
 	void init();
-	void free();
+	void destroy();
 
 private:	
 	void* scanner;

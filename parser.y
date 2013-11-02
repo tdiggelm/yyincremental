@@ -25,7 +25,7 @@
 #include "parser.h"
 #include "lexer.h"
 	
-void yyerror(context& ctx, yyscan_t scanner, const char *msg) {
+void yyerror(parser& ctx, yyscan_t scanner, const char *msg) {
 	printf("parse error: %s\n", msg);
 }
 
@@ -34,7 +34,7 @@ void yyerror(context& ctx, yyscan_t scanner, const char *msg) {
 %define api.push-pull push
 %define api.pure
 %lex-param { void* scanner }
-%parse-param { context& ctx }
+%parse-param { parser& ctx }
 %parse-param { void* scanner }
 
 %union {
