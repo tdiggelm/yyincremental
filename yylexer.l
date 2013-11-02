@@ -95,7 +95,7 @@ int parser::feed(const char* buffer, size_t size)
 	size_t newleng = bufleng + size;
 	
 	if (newleng > maxbufsize) {
-		fprintf(stderr, "error: buffer larger than 1024bytes\n");
+		fprintf(stderr, "error: buffer larger than maxsize\n");
 		return 0;
 	}
 	

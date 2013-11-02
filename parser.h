@@ -19,6 +19,9 @@
  * IN THE SOFTWARE.
  */
 
+// TODO: replace naive buffer memory allocation scheme (i.e. double initial amount on
+//        each recursion)
+
 #include <string.h>
 #include <stdlib.h>
 
