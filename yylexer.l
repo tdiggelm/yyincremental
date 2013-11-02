@@ -21,7 +21,7 @@
  */
 
 #include <assert.h>
-#include "objects.h"
+#include "parser.h"
 #include "yyparser.h"
 
 //#define DEBUG

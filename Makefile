@@ -1,19 +1,18 @@
-FILES   = lexer.cc parser.cc server.cc
 CC      = g++
 CFLAGS  = -g -ansi -Wall
 LDFLAGS = 
 
-parse:		lexer.cc parser.cc test-parser.cc
-			$(CC) $(CFLAGS) lexer.cc parser.cc test-parser.cc -o parse
+parse:		yylexer.cc yyparser.cc test-parser.cc
+			$(CC) $(CFLAGS) yylexer.cc yyparser.cc test-parser.cc -o parse
 
 server:		server.cc
 			$(CC) $(CFLAGS) server.cc -o server -lev
  
-lexer.cc:	lexer.l objects.h
-			flex lexer.l
+yylexer.cc:	yylexer.l parser.h
+			flex yylexer.l
  
-parser.cc:	parser.y lexer.cc objects.h 
-			bison parser.y
+yyparser.cc:	yyparser.y yylexer.cc parser.h 
+			bison yyparser.y
  
 clean:
-			rm -f *.o *~ lexer.cc lexer.h parser.cc parser.h server parse
+			rm -f *.o *~ yylexer.cc yylexer.h yyparser.cc yyparser.h server parse
