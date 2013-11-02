@@ -45,6 +45,8 @@
 %option yylineno
 %option case-insensitive
 %option reentrant
+%option nounistd
+%option never-interactive
 %option extra-type="parser*"
 
 %%
