@@ -25,8 +25,8 @@
 class parser
 {
 public:
-	parser()
-		: bufdata(NULL), bufleng(0)
+	parser(int maxbufsize = 1024)
+		: maxbufsize(maxbufsize), bufdata(NULL), bufleng(0)
 	{
 		init();
 	}
@@ -59,6 +59,8 @@ public:
 	virtual void error(const char* msg) = 0;
 	
 protected:
+	size_t maxbufsize;
+	
 	void init();
 	void destroy();
 

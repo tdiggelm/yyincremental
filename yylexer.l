@@ -51,8 +51,8 @@
 
 [ \t]         			{ LOG("@@@ WHITESPACE\n"); }
 						
-[+-]?[0-9]+           	{
-							sscanf(yytext, "%ld", &yylval->integer); 
+[+-]?[0-9]{1,20}        {
+							sscanf(yytext, "%ld", &yylval->integer);
 							RETURN(INTEGER);
 						}
 												
@@ -76,18 +76,29 @@ void parser::destroy()
 
 void parser::parse()
 {
-	int status;
+	int status = 0;
 	YYSTYPE val;
-	do {
-		int token = yylex(&val, scanner);
+	int token;
+	
+	assert(status != YYPUSH_MORE);
+	
+	while(1) {
+		//printf("parse: bufleng: %ld\n", bufleng);
+		token = yylex(&val, scanner);
 		if (token == YY_NULL && status == YYPUSH_MORE) return;
 		status = yypush_parse((yypstate*)ps, token, &val, *this, scanner);
-	} while (status == YYPUSH_MORE);
+		if (status != YYPUSH_MORE) return;
+	}
 }
 
 int parser::feed(const char* buffer, size_t size)
 {
 	size_t newleng = bufleng + size;
+	
+	if (newleng > maxbufsize) {
+		fprintf(stderr, "error: buffer larger than 1024bytes\n");
+		return 0;
+	}
 	
 	char* ptr = (char*)realloc(bufdata, newleng);
 	if (!ptr) {
@@ -107,6 +118,8 @@ int parser::feed(const char* buffer, size_t size)
 
 int parser::yyinput(char* buffer, int size)
 {
+	printf("yyinput: bufleng: %ld\n", bufleng);
+	
 	int len = MIN(size, bufleng);
 	
 	// copy to yy buffer
@@ -115,7 +128,12 @@ int parser::yyinput(char* buffer, int size)
 	// truncate buffer
 	int newleng = bufleng-len;
 	memmove(bufdata, bufdata+len, newleng);
-	bufdata = (char*)realloc(bufdata, newleng);
+	if (newleng) {
+		bufdata = (char*)realloc(bufdata, newleng);	
+	} else {
+		free(bufdata);
+		bufdata = NULL;
+	}
 	bufleng = newleng;
 	
 	return len;
