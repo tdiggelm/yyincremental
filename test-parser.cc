@@ -35,6 +35,10 @@ public:
 	{
 		cout << "@@@ error: " << msg << endl;
 	}
+	void quit()
+	{
+		cout << "@@@ quit" << endl;
+	}
 };
 
 int main()

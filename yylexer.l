@@ -52,12 +52,14 @@
 %%
 
 [ \t]         			{ LOG("@@@ WHITESPACE\n"); }
+
+quit					{ RETURN(QUIT); }
 						
 [+-]?[0-9]{1,20}        {
 							sscanf(yytext, "%ld", &yylval->integer);
 							RETURN(INTEGER);
 						}
-												
+			
 \n						{ RETURN(EOL); }
 
 .+						{ LOG("@@@ MISC\n"); return yytext[0]; }

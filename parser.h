@@ -60,6 +60,7 @@ public:
 	
 	virtual void foundint(long int num) = 0;
 	virtual void error(const char* msg) = 0;
+	virtual void quit() = 0;
 	
 protected:
 	size_t maxbufsize;

@@ -44,6 +44,7 @@ void yyerror(parser& p, yyscan_t scanner, const char *msg) {
 
 %token EOL
 %token <integer> INTEGER
+%token QUIT
 
 %output  "yyparser.cc"
 %defines "yyparser.h"
@@ -61,6 +62,7 @@ stmt	: line
 		
 line	: /*empty*/ EOL
 		| INTEGER EOL { ctx.foundint($1); }
+		| QUIT EOL { ctx.quit(); }
 		;
 
 %%
