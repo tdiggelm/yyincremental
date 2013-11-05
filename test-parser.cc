@@ -20,6 +20,8 @@
  */
 
 #include <iostream>
+#include <signal.h>
+#include <memory>
 #include "parser.h"
 
 using namespace std;
@@ -41,13 +43,50 @@ public:
 	}
 };
 
-int main()
-{	
-	// TODO: add possibility to create context on traditional input file
-	// TODO: build virtual class that is extendable for integration with other parsers
-	// TODO: add namespace
-	// TODO: add optional buffer limit
-	// TODO: add clear buffer function
+int main(int argc, char** argv)
+{
+	char buf[2000];
+	memset(buf, 1, 2000);
+	int i = 100;
+	while(i--) {
+		intparser pp;
+		pp.feed(buf, 1000);
+		pp.parse();
+		pp.feed(buf, 1000);
+		pp.feed(buf, 1000);
+		pp.parse();
+		pp.feed(buf, 1000);
+		pp.feed(buf, 1000);
+		pp.parse();
+	}
+	
+	i = 100;
+	while(i--) {
+		intparser* pp = new intparser();
+		pp->feed(buf, 1000);
+		pp->parse();
+		pp->feed(buf, 1000);
+		pp->feed(buf, 1000);
+		pp->parse();
+		pp->feed(buf, 1000);
+		pp->feed(buf, 1000);
+		pp->parse();
+		delete pp;
+	}
+
+	i = 100;
+	while(i--) {
+		std::auto_ptr<intparser> pp(new intparser());
+		pp->feed(buf, 1000);
+		pp->parse();
+		pp->feed(buf, 1000);
+		pp->feed(buf, 1000);
+		pp->parse();
+		pp->feed(buf, 1000);
+		pp->feed(buf, 1000);
+		pp->parse();
+		//delete pp;
+	}
 	
 	intparser pp;
 	pp.feed("123");

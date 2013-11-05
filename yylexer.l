@@ -100,6 +100,10 @@ int parser::feed(const char* buffer, size_t size)
 	
 	if (newleng > maxbufsize) {
 		fprintf(stderr, "error: buffer larger than maxsize\n");
+		// clear buffer
+		free(bufdata);
+		bufdata = NULL;
+		bufleng = 0;
 		return 0;
 	}
 	
@@ -122,20 +126,23 @@ int parser::feed(const char* buffer, size_t size)
 int parser::yyinput(char* buffer, int size)
 {
 	int len = MIN(size, bufleng);
+	if (len == 0) return 0;
 	
-	// copy to yy buffer
+	// copy data to yy buffer
 	memcpy(buffer, bufdata, len);
 	
 	// truncate buffer
 	int newleng = bufleng-len;
-	memmove(bufdata, bufdata+len, newleng);
 	if (newleng) {
-		bufdata = (char*)realloc(bufdata, newleng);	
+		memmove(bufdata, bufdata+len, newleng);
+		bufdata = (char*)realloc(bufdata, newleng);
+		assert(bufdata != NULL);
+		bufleng = newleng;
 	} else {
 		free(bufdata);
 		bufdata = NULL;
+		bufleng = 0;
 	}
-	bufleng = newleng;
 	
 	return len;
 }
