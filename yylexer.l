@@ -24,11 +24,11 @@
 #include "parser.h"
 #include "yyparser.h"
 
-//#define DEBUG
+#define DEBUG
 
 #ifdef DEBUG
-#define RETURN(val) do { printf("@@@ TOKEN = %s\n", #val); return val; } while(0)
-#define LOG(msg) printf("@@@ ## msg ## \n")
+#define RETURN(val) do { printf("### TOKEN = %s\n", #val); return val; } while(0)
+#define LOG(msg) do { printf("### LOG: %s\n", #msg); } while(0)
 #else
 #define RETURN(val) return val
 #define LOG(msg)
@@ -51,18 +51,19 @@
 
 %%
 
-[ \t]         			{ LOG("@@@ WHITESPACE\n"); }
+[ \t]         			{ LOG("@@@ IGNORE WHITESPACE\n"); }
 
 quit					{ RETURN(QUIT); }
 						
 [+-]?[0-9]{1,20}        {
 							sscanf(yytext, "%ld", &yylval->integer);
 							RETURN(INTEGER);
-						}
-			
+						}		
+
+\r\n					{ RETURN(EOL); }
 \n						{ RETURN(EOL); }
 
-.+						{ LOG("@@@ MISC\n"); return yytext[0]; }
+.						{ LOG("RETURN MISC"); return yytext[0]; }
 
 %%
 

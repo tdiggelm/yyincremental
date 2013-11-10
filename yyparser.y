@@ -53,16 +53,20 @@ void yyerror(parser& p, yyscan_t scanner, const char *msg) {
 
 stmt	: line
 		| stmt line
-		| error
+		;
+		
+line	: /*empty*/ EOL
+		| integers EOL
+		| QUIT EOL { ctx.quit(); }
+		| error EOL
 			{
 				yyerrok;
 				yyclearin;
 			}
 		;
 		
-line	: /*empty*/ EOL
-		| INTEGER EOL { ctx.foundint($1); }
-		| QUIT EOL { ctx.quit(); }
+integers: INTEGER 			{ ctx.foundint($1); }
+		| integers INTEGER 	{ ctx.foundint($2); }
 		;
 
 %%
